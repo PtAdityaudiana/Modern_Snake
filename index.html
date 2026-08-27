@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Snake</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Neon Snake"><span class="brand-dot"></span>NEON SNAKE</a>
+        <div class="wallet"><span>✦</span><strong id="goldDisplay">0</strong><small>GOLD</small></div>
+      </header>
+
+      <section class="game-layout">
+        <div class="game-area">
+          <div class="status-row">
+            <div><span>SKOR</span><strong id="scoreDisplay">000</strong></div>
+            <div><span>REKOR</span><strong id="bestDisplay">000</strong></div>
+            <button class="pause-btn" id="pauseBtn" aria-label="Jeda permainan">Ⅱ</button>
+          </div>
+          <div id="eventBanner" class="event-banner" aria-live="polite"></div>
+          <div class="board-wrap">
+            <canvas id="gameCanvas" width="600" height="600" aria-label="Permainan ular klasik"></canvas>
+            <div class="game-overlay" id="gameOverlay">
+              <p class="eyebrow">SIAP BERMAIN?</p>
+              <h1>Classic.<br /><em>Recharged.</em></h1>
+              <p class="overlay-copy">Makan energi, kumpulkan gold,<br />dan tunjukkan gaya ularmu.</p>
+              <button id="startBtn" class="primary-btn">Mulai permainan <span>→</span></button>
+              <button id="restartBtn" class="secondary-btn hidden" type="button">Restart game</button>
+              <p class="key-hint">Gunakan <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> atau WASD · <kbd>P</kbd> untuk pause</p>
+            </div>
+          </div>
+          <div class="shortcut-guide" aria-label="Panduan kontrol keyboard">
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd></span>
+              <span>Gerakkan ular</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>
+              <span>Alternatif arah</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys"><kbd>P</kbd></span>
+              <span>Pause / lanjut</span>
+            </div>
+          </div>
+          <div class="mobile-controls" aria-label="Kontrol permainan">
+            <button data-dir="up">↑</button>
+            <div><button data-dir="left">←</button><button data-dir="down">↓</button><button data-dir="right">→</button></div>
+          </div>
+        </div>
+
+        <aside class="shop-panel">
+          <div class="shop-heading"><div><p class="eyebrow">KUSTOMISASI</p><h2>Snake Shop</h2></div><span class="bag">⌁</span></div>
+          <p class="shop-intro">Gold dari setiap energi yang kamu makan bisa digunakan untuk membuka skin baru.</p>
+          <div id="skinList" class="skin-list"></div>
+          <div class="tip-card"><span>✦</span><p><b>Tip cepat</b><br />Satu energi = satu gold. Jangan menabrak dinding!</p></div>
+        </aside>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,267 @@
+:root {
+  --ink: #eaf1ef;
+  --muted: #81908d;
+  --line: rgba(232, 245, 241, 0.11);
+  --lime: #caff35;
+  --gold: #ffc83d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  font-family: Outfit, Arial, sans-serif;
+  background: #091112;
+  background-image: radial-gradient(circle at 15% 0%, #193435 0, transparent 25%), radial-gradient(circle at 85% 100%, #162a2b 0, transparent 30%);
+}
+
+.app-shell {
+  max-width: 1280px;
+  padding: 18px 32px;
+  margin: auto;
+}
+
+.topbar, .wallet, .status-row, .shop-heading, .skin-card, .tip-card {
+  display: flex;
+  align-items: center;
+}
+
+.topbar {
+  justify-content: space-between;
+  height: 46px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #f2fffc;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-decoration: none;
+}
+
+.brand-dot {
+  width: 11px;
+  height: 11px;
+  background: var(--lime);
+  border-radius: 50%;
+  box-shadow: 0 0 14px var(--lime);
+}
+
+.wallet {
+  gap: 8px;
+  padding: 8px 13px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.wallet span, .tip-card span {
+  color: var(--gold);
+}
+
+.wallet strong, .status-row strong {
+  font-family: "DM Mono";
+}
+
+.wallet strong { font-size: 16px; }
+.wallet small, .status-row span, .eyebrow, .skin-info small { color: var(--muted); }
+.wallet small { font-size: 10px; letter-spacing: 1px; }
+
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, min(70vh, calc(100vw - 480px))) minmax(280px, 340px);
+  justify-content: center;
+  gap: clamp(28px, 4vw, 52px);
+  padding-top: 24px;
+}
+
+.status-row {
+  gap: 34px;
+  align-items: end;
+  margin: 0 0 12px 3px;
+}
+
+.status-row div { display: flex; flex-direction: column; gap: 3px; }
+.status-row span, .eyebrow { margin: 0; font-family: "DM Mono"; font-size: 10px; letter-spacing: 1.5px; }
+.status-row strong { font-size: 23px; letter-spacing: 1px; }
+
+.pause-btn, .mobile-controls button {
+  color: var(--ink);
+  background: #152122;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pause-btn { width: 38px; height: 38px; margin-left: auto; font-size: 17px; }
+.event-banner {
+  min-height: 0;
+  margin: 0 0 8px;
+  color: #101b16;
+  font: 700 11px "DM Mono";
+  letter-spacing: 0.4px;
+  text-align: center;
+  background: var(--lime);
+  border-radius: 5px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: 0.2s;
+}
+
+.event-banner.visible {
+  min-height: 32px;
+  padding: 9px 12px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.event-banner.mine {
+  color: #fff1ec;
+  background: #d64c3c;
+}
+.board-wrap { position: relative; aspect-ratio: 1; background: #0b1516; border: 1px solid rgba(226, 255, 246, 0.18); box-shadow: 0 22px 55px rgba(0, 0, 0, 0.26); }
+canvas { display: block; width: 100%; height: 100%; }
+
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(7, 15, 16, 0.75);
+  backdrop-filter: blur(2px);
+}
+
+.game-overlay.hidden { pointer-events: none; opacity: 0; transition: opacity 0.25s; }
+.game-overlay h1 { margin: 14px 0 16px; font-size: clamp(42px, 6vw, 66px); line-height: 0.94; letter-spacing: -2px; }
+.game-overlay h1 em { color: var(--lime); font-style: normal; }
+.overlay-copy { margin: 0 0 25px; color: #a6b5b2; font-size: 15px; line-height: 1.5; }
+
+.primary-btn {
+  padding: 13px 18px;
+  color: #101b16;
+  font: 700 15px Outfit;
+  background: var(--lime);
+  border: 0;
+  border-radius: 6px;
+  box-shadow: 0 8px 25px rgba(202, 255, 53, 0.14);
+  cursor: pointer;
+}
+
+.primary-btn span { margin-left: 14px; font-size: 20px; }
+.secondary-btn {
+  padding: 10px 18px;
+  margin-top: 9px;
+  color: #dce9e5;
+  font: 600 13px Outfit;
+  background: transparent;
+  border: 1px solid #49605b;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.secondary-btn.hidden {
+  display: none;
+}
+
+.primary-btn:disabled {
+  color: #74817d;
+  background: #2a3635;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.key-hint { margin: 26px 0 0; color: #70817e; font: 10px "DM Mono"; }
+.key-hint kbd { padding: 2px 4px; margin: 0 2px; color: #b8c8c4; border: 1px solid #49605b; border-bottom-width: 2px; border-radius: 3px; }
+.shortcut-guide {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  align-items: center;
+  padding: 11px 2px 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.shortcut-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.shortcut-keys {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.shortcut-guide kbd {
+  display: inline-grid;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 4px;
+  color: #d9e7e3;
+  font: 10px "DM Mono";
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #49605b;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  place-items: center;
+}
+.shop-panel { padding-top: 2px; }
+.shop-heading { align-items: flex-start; justify-content: space-between; }
+.shop-heading h2 { margin: 8px 0 0; font-size: 30px; line-height: 1; letter-spacing: -1px; }
+.bag { display: grid; width: 38px; height: 38px; color: var(--lime); font-size: 28px; border: 1px solid var(--line); border-radius: 6px; place-items: center; }
+.shop-intro { margin: 24px 0; color: #8b9a97; font-size: 13px; line-height: 1.55; }
+.skin-list { display: grid; gap: 10px; }
+
+.skin-card {
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  transition: 0.2s;
+}
+
+.skin-card.active { background: rgba(202, 255, 53, 0.055); border-color: rgba(202, 255, 53, 0.6); }
+.skin-preview { position: relative; flex: none; width: 47px; height: 47px; overflow: hidden; background: #172426; border-radius: 6px; }
+.skin-preview i { position: absolute; top: 17px; left: 5px; width: 44px; height: 14px; background: var(--skin); border-radius: 12px; box-shadow: 0 0 12px var(--skin); transform: rotate(-25deg); }
+.skin-info { flex: 1; min-width: 0; }
+.skin-info b { display: block; font-size: 14px; }
+.skin-info small { font: 10px "DM Mono"; }
+.skin-card button { padding: 7px 9px; color: #d7e4e0; font: 600 11px Outfit; background: #1b2a2a; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; }
+.skin-card button.buy { color: #191509; background: var(--gold); border-color: var(--gold); }
+.skin-card button:disabled { opacity: 0.55; cursor: not-allowed; }
+.tip-card { gap: 11px; padding: 13px; margin-top: 20px; color: #9aa9a6; background: rgba(202, 255, 53, 0.055); border-left: 2px solid var(--lime); }
+.tip-card p { margin: 0; font-size: 11px; line-height: 1.5; }
+.tip-card b { color: #edf5f1; }
+.mobile-controls { display: none; }
+
+@media (max-width: 850px) {
+  .app-shell { padding: 20px; }
+  .game-layout { grid-template-columns: 1fr; gap: 30px; padding-top: 28px; }
+  .shop-panel { max-width: 600px; }
+  .mobile-controls { display: grid; justify-content: center; gap: 5px; margin: 15px 0; }
+  .mobile-controls div { display: flex; gap: 5px; }
+  .mobile-controls button { width: 42px; height: 36px; font-size: 19px; }
+  .mobile-controls > button { justify-self: center; }
+  .shortcut-guide { justify-content: center; }
+}
+
+@media (max-width: 500px) {
+  .app-shell { padding: 15px; }
+  .topbar { height: 42px; padding-bottom: 16px; }
+  .game-layout { grid-template-columns: minmax(0, 1fr); }
+  .status-row { gap: 22px; }
+  .game-overlay h1 { font-size: 46px; }
+}
