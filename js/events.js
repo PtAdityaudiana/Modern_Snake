@@ -29,6 +29,11 @@ window.GameEvents = {
     const state = GameState;
     state.activeEvent = Math.random() < 0.5 ? "frenzy" : "mine";
     state.eventEndAt = now + (state.activeEvent === "frenzy" ? 15000 : 10000);
+    if (state.activeEvent === "frenzy") {
+      GameAudio.eventFrenzy();
+    } else {
+      GameAudio.eventMine();
+    }
     if (state.activeEvent === "mine") {
       state.bombs = [];
       state.lastMineSpawnAt = 0;

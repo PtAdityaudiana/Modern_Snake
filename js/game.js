@@ -1,5 +1,14 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+const LOGICAL_SIZE = 600;
+
+function setupCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = LOGICAL_SIZE * dpr;
+  canvas.height = LOGICAL_SIZE * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+setupCanvas();
 
 function drawGrid() {
   const state = GameState;
@@ -80,6 +89,31 @@ function drawSnake() {
 }
 
 window.Game = {
+  lastTime: 0,
+  accumulator: 0,
+
+  getSpeed() {
+    return Math.max(50, 115 - Math.floor(GameState.score * 1.2));
+  },
+
+  loop(timestamp) {
+    if (!GameState.running) return;
+
+    if (!this.lastTime) this.lastTime = timestamp;
+    const delta = timestamp - this.lastTime;
+    this.lastTime = timestamp;
+    this.accumulator += delta;
+
+    const speed = this.getSpeed();
+    while (this.accumulator >= speed) {
+      this.tick();
+      this.accumulator -= speed;
+      if (!GameState.running) return;
+    }
+
+    GameState.timer = requestAnimationFrame((ts) => this.loop(ts));
+  },
+
   reset() {
     const state = GameState;
     state.snake = [{ x: 15, y: 15 }, { x: 14, y: 15 }, { x: 13, y: 15 }, { x: 12, y: 15 }];
@@ -100,7 +134,10 @@ window.Game = {
     const state = GameState;
     do {
       state.food = { x: Math.floor(Math.random() * state.cells), y: Math.floor(Math.random() * state.cells) };
-    } while (state.snake.some((part) => part.x === state.food.x && part.y === state.food.y));
+    } while (
+      state.snake.some((part) => part.x === state.food.x && part.y === state.food.y) ||
+      state.bombs.some((bomb) => bomb.x === state.food.x && bomb.y === state.food.y)
+    );
   },
 
   draw() {
@@ -122,6 +159,9 @@ window.Game = {
       }
       state.gold -= skin.cost;
       state.owned.push(skin.id);
+      GameAudio.buy();
+    } else {
+      GameAudio.equip();
     }
     state.selected = skin.id;
     GameStorage.save();
@@ -140,8 +180,14 @@ window.Game = {
   eatFood() {
     const state = GameState;
     state.score += 1;
-    state.gold += state.activeEvent === "frenzy" ? 3 : 1;
+    const isFrenzy = state.activeEvent === "frenzy";
+    state.gold += isFrenzy ? 3 : 1;
     state.best = Math.max(state.score, state.best);
+    if (isFrenzy) {
+      GameAudio.frenzyEat();
+    } else {
+      GameAudio.eat();
+    }
     this.spawnFood();
     GameStorage.save();
     GameUI.updateHud();
@@ -163,19 +209,23 @@ window.Game = {
   },
 
   start() {
-    clearInterval(GameState.timer);
+    if (GameState.timer) cancelAnimationFrame(GameState.timer);
     this.reset();
+    this.lastTime = 0;
+    this.accumulator = 0;
     GameState.running = true;
     GameUI.hideOverlay();
     GameUI.updateHud();
     this.draw();
-    GameState.timer = setInterval(() => this.tick(), 115);
+    GameState.timer = requestAnimationFrame((ts) => this.loop(ts));
   },
 
   gameOver() {
     GameState.running = false;
     GameState.paused = false;
-    clearInterval(GameState.timer);
+    if (GameState.timer) cancelAnimationFrame(GameState.timer);
+    GameState.timer = null;
+    GameAudio.gameOver();
     GameUI.showGameOver();
   },
 
@@ -187,6 +237,7 @@ window.Game = {
     state.snake = [{ x: 15, y: 15 }, { x: 14, y: 15 }, { x: 13, y: 15 }, { x: 12, y: 15 }];
     state.direction = { x: 1, y: 0 };
     state.nextDirection = { x: 1, y: 0 };
+    GameAudio.revive();
     Game.spawnFood();
     GameStorage.save();
     GameUI.updateHud();
@@ -201,17 +252,29 @@ window.Game = {
   },
 
   resume() {
+    const now = Date.now();
+    if (GameState.activeEvent && GameState._pausedEventRemaining > 0) {
+      GameState.eventEndAt = now + GameState._pausedEventRemaining;
+    }
+    if (!GameState.activeEvent && GameState._pausedNextEventRemaining > 0) {
+      GameState.nextEventAt = now + GameState._pausedNextEventRemaining;
+    }
+    this.lastTime = 0;
     GameState.running = true;
     GameState.paused = false;
     GameUI.hideOverlay();
-    GameState.timer = setInterval(() => this.tick(), 115);
+    GameState.timer = requestAnimationFrame((ts) => this.loop(ts));
   },
 
   pause() {
     if (!GameState.running) return;
+    const now = Date.now();
     GameState.running = false;
     GameState.paused = true;
-    clearInterval(GameState.timer);
+    GameState._pausedEventRemaining = GameState.activeEvent ? Math.max(0, GameState.eventEndAt - now) : 0;
+    GameState._pausedNextEventRemaining = !GameState.activeEvent ? Math.max(0, GameState.nextEventAt - now) : 0;
+    if (GameState.timer) cancelAnimationFrame(GameState.timer);
+    GameState.timer = null;
     GameUI.showPause();
   },
 
