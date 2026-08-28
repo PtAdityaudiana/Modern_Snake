@@ -4,7 +4,7 @@ Game Snake klasik dengan tampilan modern bertema neon. Pemain mengumpulkan gold 
 
 ## Cara menjalankan
 
-Tidak memerlukan instalasi apa pun. Buka file [index.html](index.html) menggunakan browser modern, seperti Google Chrome, Microsoft Edge, atau Firefox.
+Tidak memerlukan instalasi apa pun. Cukup buka tautan https://ptadityaudiana.github.io/Modern_Snake/ di Google Chrome, Microsoft Edge, atau Firefox.
 
 ## Fitur
 
