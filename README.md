@@ -35,4 +35,7 @@ Tidak memerlukan instalasi apa pun. Buka file [index.html](index.html) menggunak
 
 - `index.html` — struktur antarmuka game.
 - `style.css` — desain visual, layout responsif, dan komponen UI.
-- `script.js` — logika game, shop, penyimpanan lokal, revive, dan event.
+- `js/state.js` — data game dan penyimpanan lokal.
+- `js/ui.js` — pembaruan HUD, shop, banner event, dan overlay.
+- `js/events.js` — logika event Feeding Frenzy dan Mine Land.
+- `js/game.js` — inti permainan, render canvas, input, dan alur permainan.
